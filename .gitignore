@@ -31,3 +31,6 @@ npm-debug.log
 
 # Yarn
 yarn.lock
+
+# Environment specific
+.env
