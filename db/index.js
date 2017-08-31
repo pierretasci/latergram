@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 // Loads all of the individual collections.
 require('./item');
+require('./user');
 
 mongoose.Promise = global.Promise;
 
