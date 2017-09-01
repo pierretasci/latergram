@@ -4,10 +4,10 @@ module.exports = {
     script: './bin/www',
     env: {
       NODE_ENV: 'development',
-      COMMON_VARIABLE: 'true'
+      COMMON_VARIABLE: 'true',
     },
     env_production: {
-      NODE_ENV: 'production'
-    }
-  }]
+      NODE_ENV: 'production',
+    },
+  }],
 };

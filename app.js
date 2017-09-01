@@ -11,7 +11,6 @@ const session = require('./modules/sessions');
 
 // Load the database.
 require('./db');
-require('./modules/authentication');
 
 const app = express();
 
@@ -24,7 +23,6 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
@@ -32,6 +30,9 @@ if (process.env.NODE_ENV === 'production') {
 app.use(session);
 app.use(passport.initialize());
 app.use(passport.session());
+require('./modules/authentication');
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 const index = require('./routes/index');
 const users = require('./routes/users');
