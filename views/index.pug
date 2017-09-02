@@ -1,8 +1,18 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  include header.pug
 
-  if logged_in_username
-    .welcome= 'Welcome ' + logged_in_fullname + '!'
+  .content
+    p.
+      Welcome to Augustus, the best way to schedule your Instagram posts and
+      videos for later! Augustus coudn't be any easier to use. Just login with
+      your Instagram account. Upload an image or video and set a time when you
+      would like to post it. Optionally, add in a description with hashtags.
+
+    p.
+      You will receive an alert when it is time to post. Just click the link on a
+      mobile device and you can complete the post in the Instagram app.
+
+    if logged_in_username
+      a(href="//schedule") Schedule a new post!

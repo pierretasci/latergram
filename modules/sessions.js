@@ -14,8 +14,8 @@ const sessionOptions = {
     uri: process.env.SESSION_URI,
     collection: 'sessions',
   }),
-  resave: true,
-  saveUninitialized: true,
+  resave: false,
+  saveUninitialized: false,
 };
 
 if (process.env.NODE_ENV === 'production') {
