@@ -474,8 +474,65 @@ header .title {
   font-weight: bold;
 }
 
+header .user a:not(:last-child) {
+  margin-right: 0.5rem;
+}
+
 /* Main Content
    ========================================================================== */ 
-.content {
-  padding: 0 1rem;
+
+   .content {
+  padding: 1rem;
+}
+
+/* Forms
+   ========================================================================== */ 
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form > *:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+
+.form .item {
+  display: flex;
+  flex-direction: column;
+}
+
+.form .item label {
+  font-weight: bold;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  color: #666666;
+}
+
+.form .item.required label::after {
+  content: '*';
+  color: red;
+}
+
+.btn {
+  outline: 0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: none;
+  box-shadow: 0 0 3px #aaa;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: 0.3s box-shadow;
+}
+
+.btn:hover {
+  box-shadow: 0 0 10px #aaa;
+}
+
+.btn:active {
+  background-color: rgba(204, 204, 204, 0.2);
+}
+
+.submit {
+  width: 10rem;
 }

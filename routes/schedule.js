@@ -1,9 +1,11 @@
 const express = require('express');
+const authenticated = require('../middleware/authentication');
+const upload = require('../middleware/multer');
 
 const router = express.Router();
 
 /* GET home page. */
-router.get('/', (req, res) => {
+router.get('/', authenticated, (req, res) => {
   const params = {
     title: 'Augustus',
   };
@@ -13,12 +15,11 @@ router.get('/', (req, res) => {
     params.logged_in_fullname = req.user.name;
   }
 
-  res.render('index', params);
+  res.render('schedule', params);
 });
 
-router.get('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/');
+router.post('/', authenticated, upload.single('media_content'), (req, res) => {
+  res.send('Success');
 });
 
 module.exports = router;

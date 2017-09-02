@@ -2,6 +2,7 @@ header
     .title Augustus
     .user
       if logged_in_username
-        a(href="//logged_in_username")= logged_in_fullname
+        a(href="/logged_in_username")= logged_in_fullname
+        a(href="/logout") Logout
       else
-        a(href="//auth/instagram") Login
+        a(href="/auth/instagram") Login

@@ -35,13 +35,12 @@ require('./modules/authentication');
 app.use(express.static(path.join(__dirname, 'public')));
 
 const index = require('./routes/index');
-const users = require('./routes/users');
 const auth = require('./routes/authentication');
+const schedule = require('./routes/schedule');
 
 app.use('/', index);
-app.use('/users', users);
 app.use('/auth', auth);
-
+app.use('/schedule', schedule);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
