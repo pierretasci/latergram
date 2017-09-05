@@ -1,20 +1,14 @@
 extends layout
 
 block styles
+  link(rel='stylesheet', href='https://unpkg.com/purecss@1.0.0/build/grids-min.css')
   link(rel='stylesheet', href='/stylesheets/schedule.css')
 
 block content
   include header.pug
 
-  .content
-    h2 Upload a new post
-    form(method='POST', action='', enctype='multipart/form-data').form
-      .item.required
-        label(for="file") Select an image or video to post.
-        input(type='file', name='media_content').media
+  .content#app
+    create
 
-      .item.required
-        label(for="media_description") Enter a complete description.
-        textarea(name='media_description', cols="30", rows="10").description
-
-      button(type="submit").btn.submit Submit
+block scripts
+  script(src='/javascripts/schedule.js')

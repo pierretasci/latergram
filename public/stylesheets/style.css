@@ -46,7 +46,10 @@ section {
 
 h1 {
   font-size: 2em;
-  margin: 0.67em 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
 }
 
 /* Grouping content
@@ -535,4 +538,15 @@ header .user a:not(:last-child) {
 
 .submit {
   width: 10rem;
+}
+
+.errors {
+  display: flex;
+  flex-direction: column;
+}
+
+.errors .error {
+  color: rgba(255, 0, 0, 0.65);
+  font-size: 0.8rem;
+  font-weight: 300;
 }

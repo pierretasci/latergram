@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const passport = require('passport');
+const csurf = require('csurf');
 const session = require('./modules/sessions');
 
 // Load the database.
@@ -32,14 +33,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 require('./modules/authentication');
 
+app.use(csurf({ cookie: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 const index = require('./routes/index');
 const auth = require('./routes/authentication');
+const post = require('./routes/post');
 const schedule = require('./routes/schedule');
 
 app.use('/', index);
 app.use('/auth', auth);
+app.use('/post', post);
 app.use('/schedule', schedule);
 
 // catch 404 and forward to error handler

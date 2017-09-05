@@ -4,6 +4,7 @@ const mongoSession = require('connect-mongodb-session');
 const MongoStore = mongoSession(session);
 
 const sessionOptions = {
+  name: 'augustus',
   secret: process.env.SESSION_SECRET,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year.
