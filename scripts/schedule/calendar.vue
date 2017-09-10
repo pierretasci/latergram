@@ -1,12 +1,14 @@
 <template lang='pug'>
   .calendar
     template(v-for='day in window_diff')
-      .day 
+      .day(:key='day') 
         .month 
           .day-of-week {{dayOfWeekFor(day)}}
           .day-of-month {{dateFor(day)}}
-        .posts(v-for='post in postsFor(day)')
-          .post {{timeForPost(post)}}
+        .posts(v-for='post in postsFor(day)', :key='post._id')
+          .post 
+            .insignia(v-bind:class='insigniaClassForSchedule(post.schedule)')
+            .post-info {{timeForPost(post)}}
     button(@click='loadMore') Load more...
 
 </template>
@@ -34,18 +36,52 @@ export default {
   },
 
   computed: {
-    filtered_posts: function() {
-      return this.posts.filter((p) => 
-        moment(p.post_time_utc).isSameOrAfter(moment(this.window_start)) && 
-        moment(p.post_time_utc).isSameOrBefore(moment(this.window_end)));
+    posts_per_day: function() {
+      const retval = {};
+      const current = moment(this.window_start);
+      this.posts.forEach((p) => {
+        const post_time = moment(p.post_time_utc).tz(timezone);
+        // If the post is before current, then skip to the next post.
+        if (post_time.isBefore(current, 'day')) {
+          return;
+        }
+
+        // If the post is after the current day, increment the current day until
+        // this is no longer true or we reached the window end.
+        while (current.isSameOrBefore(moment(this.window_end)) &&
+          current.isBefore(post_time, 'day')) {
+            current.add(1, 'days');
+        }
+        if (current.isAfter(moment(this.window_end))) {
+          return;
+        }
+
+        // By now, we have either broken the loop or are on a day that is valid.
+        if (!(current.format('YYYY-MM-DD') in retval)) {
+          retval[current.format('YYYY-MM-DD')] = [];
+        }
+        retval[current.format('YYYY-MM-DD')].push(p);
+      });
+      return retval;
     },
     window_diff: function() {
       console.log(moment(this.window_end).diff(moment(this.window_start), 'days'));
       return moment(this.window_end).diff(moment(this.window_start), 'days');
+    },
+    schedule_color_map: function() {
+      const color_map = {};
+      this.schedules.forEach((s, i) => color_map[s._id] = i + 1);
+      return color_map;
     }
   },
 
   methods: {
+    insigniaClassForSchedule: function(schedule) {
+      const retval = {};
+      retval['insignia-' + this.schedule_color_map[schedule]] = true;
+      return retval;
+    },
+
     dateFor: function(dayOffset) {
       const day = moment(this.window_start).add(dayOffset, 'days');
       return day.format('MMMM DD');
@@ -58,10 +94,7 @@ export default {
 
     postsFor: function(dayOffset) {
       const day = moment(this.window_start).add(dayOffset, 'days');
-      return this.posts.filter((p) => {
-        const post_time = moment(p.post_time_utc).tz(timezone);
-        return post_time.isSame(day, 'day');
-      });
+      return this.posts_per_day[day.format('YYYY-MM-DD')];
     },
 
     timeForPost: function(post) {
@@ -103,7 +136,7 @@ export default {
 
     &:nth-child(7n + 1)
       border-left: 1px solid #666666
-
+    
   .posts
     flex: 1
     display: flex
@@ -115,5 +148,29 @@ export default {
       padding: 0.5rem
       border-radius: 3px
       border: 1px solid #ccc
+      position: relative
+      overflow: hidden
+
+      .insignia
+        position: absolute
+        left: 0
+        top: -0.1rem
+        bottom: -0.1rem
+        width: 0.2rem
+
+        &.insignia-1
+          background-color: #EF4836
+        
+        &.insignia-2
+          background-color: #446CB3
+
+        &.insignia-3
+          background-color: #03C9A9
+
+        &.insignia-4
+          background-color: #F9BF3B
+
+        &.insignia-5
+          background-color: #BFBFBF
 
 </style>
