@@ -34,3 +34,6 @@ yarn.lock
 
 # Environment specific
 .env
+
+# Mongo files.
+mongo_data

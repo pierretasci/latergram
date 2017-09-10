@@ -82,7 +82,7 @@ PostSchema.statics.createFirst50 = function (schedule) { // eslint-disable-line 
     case constants.REPETITION_TYPES.REPEAT_WEEKENDS: {
       const postDate = moment(start);
       // Move to the first weekend on or after postDate. S = 0, S = 6.
-      while (postDate.day() !== 0 || postDate.day() !== 6) {
+      while (postDate.day() !== 0 && postDate.day() !== 6) {
         postDate.add(1, 'days');
       }
       for (let i = 0; i < 50; i += 1) {
