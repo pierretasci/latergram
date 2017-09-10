@@ -5,6 +5,7 @@ module.exports = {
       'node_modules',
       'tmp',
       '.gitignore',
+      '.git',
     ],
     script: './bin/www',
     env: {

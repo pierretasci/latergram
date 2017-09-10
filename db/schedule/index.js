@@ -12,13 +12,20 @@ const REPETITION_TYPES = [
 const Schema = mongoose.Schema;
 
 const ScheduleSchema = new Schema({
-  user: { type: String, required: true, index: true },
+  user: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    index: true,
+    ref: 'users',
+  },
   start: { type: Date, required: true },
+  start_timezone: { type: String, required: true },
   repetition: { type: Boolean, required: true, default: false },
   repetition_type: { type: String, enum: REPETITION_TYPES },
   repetition_hour: { type: Number, min: 1, max: 12 },
   repetition_minute: { type: Number, min: 0, max: 60 },
   repetition_meridian: { type: String, enum: ['AM', 'PM'] },
+  nearing_completion: { type: Date },
 }, {
   timestamps: true,
 });

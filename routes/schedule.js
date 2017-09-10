@@ -7,6 +7,7 @@ const constants = require('../constants');
 const moment = require('moment-timezone');
 
 const Schedule = mongoose.model('schedules');
+const Post = mongoose.model('posts');
 const router = express.Router();
 
 /* GET scheduling page. */
@@ -20,17 +21,26 @@ router.get('/', authenticated, (req, res, next) => {
     logged_in_fullname: req.user.name,
   };
 
-  if (req.session.schedule_errors && 
+  if (req.session.schedule_errors &&
       Object.keys(req.session.schedule_errors).length > 0) {
     params.page_data.errors = req.session.schedule_errors.errors;
     params.page_data.prefill = req.session.schedule_errors.prefill;
+    delete req.session.schedule_errors;
   }
 
-  Schedule.find({ user: req.user.username },
+  Schedule.find({ user: req.user._id },
     'start repetition repetition_type repetition_hour repetition_minute' +
-    'repetition_meridianm -_id').then((schedules) => {
-    params.page_data.schedules = schedules;
-    res.render('schedule', params);
+    'repetition_meridianm').then((schedules) => {
+    params.page_data.schedules = schedules.map(s => s.toObject());
+
+    console.log(schedules.map(s => s._id));
+
+    return Post.find({ schedule: { $in: schedules.map(s => s._id) } },
+      'schedule post_time_utc has_media')
+      .then((posts) => {
+        params.page_data.posts = posts.map(p => p.toObject());
+        res.render('schedule', params);
+      });
   }).catch(err => next(err));
 });
 
@@ -64,16 +74,28 @@ router.post('/', [
   }
 
   const rawScheduleData = matchedData(req);
+  // First create the Schedule.
   return Schedule.create({
-    user: req.user.username,
+    user: req.user._id,
     start: moment.tz(rawScheduleData.date, rawScheduleData.timezone).toDate(),
-    repetition: true,
+    start_timezone: rawScheduleData.timezone,
+    repetition: rawScheduleData['repetition-type'] !== constants.REPETITION_TYPES.REPEAT_NONE,
     repetition_type: rawScheduleData['repetition-type'],
     repetition_hour: rawScheduleData.hours,
     repetition_minute: rawScheduleData.minutes,
     repetition_meridian: rawScheduleData.meridian,
-  }).then(() => res.redirect('/schedule'))
-    .catch(err => next(err));
+  }).then((schedule) => {
+    if (schedule.repetition === false) {
+      return res.redirect('/schedule');
+    }
+
+    return Post.createFirst50(schedule)
+      .then(() => res.redirect('/schedule'))
+      .catch((err) => {
+        console.error(err);
+        next(err);
+      });
+  });
 });
 
 module.exports = router;

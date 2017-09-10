@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 require('./item');
 require('./user');
 require('./schedule');
+require('./post');
 
 mongoose.Promise = global.Promise;
 

@@ -452,6 +452,10 @@ template {
 /* Augustus Content
    ========================================================================== */
 
+* {
+  box-sizing: border-box;
+}
+
 html {
   height: 100%;
 }
@@ -459,6 +463,8 @@ html {
 body {
   font-family: 'Open Sans', sans-serif;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Header
@@ -484,8 +490,9 @@ header .user a:not(:last-child) {
 /* Main Content
    ========================================================================== */ 
 
-   .content {
+.content {
   padding: 1rem;
+  flex: 1;
 }
 
 /* Forms
